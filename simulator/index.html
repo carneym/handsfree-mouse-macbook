@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Head mouse lab</title>
+<style>
+:root{color-scheme:light;--ink:#172c38;--muted:#61737d;--line:#dce4e6;--paper:#fff;--bg:#f1f4f3;--teal:#087e77;--orange:#e9894c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:9px;padding:9px 14px;background:#fff;color:var(--ink);font-weight:600;transition:background .12s}
+button:hover:enabled{background:#edf4f3}button:disabled{opacity:.42;cursor:default}button:focus-visible,input:focus-visible,canvas:focus-visible{outline:3px solid #e9894c;outline-offset:3px}
+button.primary{background:var(--teal);border-color:var(--teal);color:#fff}button.primary:hover:enabled{background:#05635e}
+button.dark{background:var(--ink);color:#fff;border-color:var(--ink)}button.small{padding:6px 10px;font-size:12px}
+header{max-width:1320px;margin:auto;padding:28px 32px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:13px}.brand-icon{width:42px;height:42px;border-radius:13px;background:var(--ink);color:#85d2bd;display:grid;place-items:center;font-size:25px}
+h1{font-size:25px;letter-spacing:-.8px;line-height:1.2;margin:0 0 4px}p{margin:0}.muted{color:var(--muted)}.eyebrow{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;font-weight:700}
+main{max-width:1320px;margin:auto;padding:0 32px 32px}.topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}
+.status{display:inline-flex;gap:7px;align-items:center;font-size:12px;font-weight:600}.status:before{content:"";width:7px;height:7px;background:#98aaa9;border-radius:50%}.status.live:before{background:#1bb897}
+.tag{font-size:11px;border:1px solid var(--line);border-radius:20px;padding:4px 10px;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+.step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px;display:flex;align-items:center;gap:12px}
+.step.current{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal)}.step.done{background:#f6fbf9}.number{background:#eef2f2;border-radius:50%;width:30px;height:30px;display:grid;place-items:center;font-weight:700;flex:none}.done .number{background:#d9eee5;color:#08765a}
+.step-title{font-weight:650}.step-note{font-size:11px;color:var(--muted)}.step button{margin-left:auto;padding:7px 11px;font-size:12px}
+.notice{min-height:54px;background:#e5efec;border:1px solid #d5e5df;display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;margin-bottom:18px}
+.notice strong{font-size:20px;min-width:28px;color:var(--teal)}.notice.error{background:#fff0e4;color:#8b471c;border-color:#f2d4bb}
+.workspace{display:grid;grid-template-columns:minmax(0,1.85fr) minmax(300px,1fr);gap:18px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}.panel-head{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+h2{font-size:15px;margin:0;letter-spacing:-.2px}.screen-wrap{padding:0 14px}.screen{display:block;width:100%;aspect-ratio:16/9;background:#142c3a;border-radius:10px;touch-action:none}
+.screen-caption{font-size:12px;color:var(--muted);padding:10px 18px;display:flex;justify-content:space-between;gap:10px}
+.toolbar{padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);align-items:center}.toolbar .hint{font-size:11px;color:var(--muted);margin-left:auto}
+.tuning{padding:16px 18px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:20px}
+label{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;margin-bottom:7px}label output{font-variant-numeric:tabular-nums;color:var(--teal);font-weight:650}
+input[type=range]{width:100%;accent-color:var(--teal);margin:0;cursor:pointer}.help{font-size:11px;color:var(--muted);margin-top:6px}
+.head-stage{height:140px;position:relative;display:grid;place-items:center;background:radial-gradient(ellipse at center,#e5efeb 0,transparent 65%);margin:0 18px}
+.head-stage:before,.head-stage:after{content:"";position:absolute;border:1px dashed #cbd9d3;border-radius:50%;width:175px;height:110px}.head-stage:after{width:110px;height:135px}
+.avatar{width:105px;height:125px;position:relative;z-index:1;transition:transform .07s linear;transform-style:preserve-3d}.avatar svg{width:100%;height:100%}
+.head-readout{display:flex;justify-content:center;gap:22px;font-size:12px;color:var(--muted);padding:4px 0 12px}.head-readout b{color:var(--ink);font-variant-numeric:tabular-nums}
+.controls{padding:10px 18px 18px}.controls .control{margin-bottom:11px}.pose-buttons{display:flex;gap:7px;margin-top:12px}.pose-buttons button{flex:1;font-size:12px;padding:8px 4px}
+.instructions{padding:12px 18px;background:#f7f9f8;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+details{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:white}summary{padding:13px 18px;cursor:pointer;font-size:12px;font-weight:650}
+.sensor-body{padding:0 18px 16px;display:grid;grid-template-columns:1fr 1fr;gap:22px}.sensor-body .control{margin-bottom:11px}
+.telemetry{font-size:11px;font-family:ui-monospace,SFMono-Regular,monospace;line-height:1.9;background:#f3f6f5;border-radius:8px;padding:10px;margin-top:10px}
+.result{padding:10px 0 0;font-size:11px;color:var(--muted)}footer{padding:18px 0 0;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:15px}
+kbd{font:10px system-ui;background:#edf1f0;border:1px solid #cfd8d5;border-radius:3px;padding:1px 4px;color:var(--ink)}
+@media(max-width:930px){header,main{padding-left:18px;padding-right:18px}.workspace{grid-template-columns:1fr}.head-stage{height:100px}.avatar{height:95px}.steps{gap:6px}.step{padding:10px;gap:7px}.step-note{display:none}.sensor-body{grid-template-columns:1fr}.toolbar .hint{width:100%;margin-left:0}}
+@media(max-width:600px){header{flex-wrap:wrap}.steps{grid-template-columns:1fr}.step-note{display:block}.step{padding:10px 12px}.tuning{gap:12px}.topline .tag{display:none}footer{display:block}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="brand-icon" aria-hidden="true">⌁</div><div><h1>Head mouse lab</h1><p class="muted">Find the feel before the first fitting.</p></div></div>
+ <button class="primary" id="demo">Run calibration demo</button>
+</header>
+<main>
+ <div class="topline"><div class="eyebrow">01 · Calibrate the virtual sensor</div><span class="tag">100 Hz virtual IMU · shared Python motion engine</span></div>
+ <section class="steps" aria-label="Calibration steps">
+  <div class="step" id="step-zero"><span class="number">1</span><div><div class="step-title">Hold still</div><div class="step-note">Measure sensor bias · 2 seconds</div></div><button id="zero">Capture</button></div>
+  <div class="step" id="step-right"><span class="number">2</span><div><div class="step-title">Look right</div><div class="step-note">Learn the horizontal axis</div></div><button id="right">Capture</button></div>
+  <div class="step" id="step-down"><span class="number">3</span><div><div class="step-title">Nod down</div><div class="step-note">Learn the vertical axis</div></div><button id="down">Capture</button></div>
+ </section>
+ <div class="notice" id="notice" role="status" aria-live="polite"><strong id="countdown">→</strong><span id="message">Connecting to the local simulator…</span></div>
+ <div class="workspace">
+  <section class="panel">
+   <div class="panel-head"><h2>02 · Pointer preview</h2><span class="status" id="status">Awaiting calibration</span></div>
+   <div class="screen-wrap"><canvas class="screen" id="screen" width="1280" height="720" tabindex="0" aria-label="Virtual screen with a simulated cursor and an orange target"></canvas></div>
+   <div class="screen-caption"><span>Hold the pointer on a target for 0.4 s</span><span><b id="hits">0</b> targets reached</span></div>
+   <div class="toolbar">
+    <button class="primary" id="enable" disabled>Enable preview</button>
+    <button id="center" class="small">Center pointer</button>
+    <button id="rezero" class="small" disabled>Re-zero sensor</button>
+    <button id="cancel" class="small" hidden>Cancel capture</button>
+    <span class="hint"><kbd>Esc</kbd> pauses · <kbd>Space</kbd> toggles</span>
+   </div>
+   <div class="tuning">
+    <div><label for="gain">Sensitivity <output id="gain-value">22 px/°</output></label><input id="gain" type="range" min="4" max="65" step="1" value="22"><p class="help">More pixels per degree gives greater travel.</p></div>
+    <div><label for="deadzone">Dead zone <output id="deadzone-value">0.8 °/s</output></label><input id="deadzone" type="range" min=".2" max="5" step=".1" value=".8"><p class="help">Higher values suppress slow movement and drift.</p></div>
+   </div>
+  </section>
+  <section class="panel">
+   <div class="panel-head"><h2>03 · Move your virtual head</h2><span class="tag">±25°</span></div>
+   <div class="head-stage" aria-hidden="true"><div class="avatar" id="avatar">
+    <svg viewBox="0 0 120 140" fill="none"><path d="M30 132c5-16 15-22 30-22s25 6 30 22" fill="#aacbbd"/><rect x="47" y="100" width="26" height="20" rx="8" fill="#c99d81"/><ellipse cx="21" cy="65" rx="7" ry="13" fill="#d4ae94"/><ellipse cx="99" cy="65" rx="7" ry="13" fill="#d4ae94"/><rect x="23" y="12" width="74" height="100" rx="35" fill="#dfbba1"/><path d="M24 50c-5-23 7-43 35-43 30 0 41 18 37 42-10-9-12-18-14-23-14 15-42 14-58 24Z" fill="#244237"/><rect x="25" y="51" width="30" height="22" rx="7" fill="#284c4e" stroke="#172c38" stroke-width="4"/><rect x="65" y="51" width="30" height="22" rx="7" fill="#284c4e" stroke="#172c38" stroke-width="4"/><path d="M55 59h10M21 54l-4-2m82 2 4-2" stroke="#172c38" stroke-width="4"/><path d="m59 68-3 16h7" stroke="#bd896f" stroke-width="2" stroke-linecap="round"/><path d="M49 94q11 7 22 0" stroke="#935f4c" stroke-width="2" stroke-linecap="round"/><rect x="17" y="49" width="8" height="13" rx="2" fill="#e9894c"/></svg>
+   </div></div>
+   <div class="head-readout"><span>Turn <b id="yaw-readout">0.0°</b></span><span>Nod <b id="pitch-readout">0.0°</b></span></div>
+   <div class="controls">
+    <div class="control"><label for="yaw">Left ↔ right <output id="yaw-value">0.0°</output></label><input id="yaw" type="range" min="-25" max="25" step=".1" value="0"></div>
+    <div class="control"><label for="pitch">Up ↔ down <output id="pitch-value">0.0°</output></label><input id="pitch" type="range" min="-25" max="25" step=".1" value="0"></div>
+    <div class="pose-buttons"><button id="turn">Turn right 12°</button><button id="nod">Nod down 12°</button><button id="neutral">Face forward</button></div>
+   </div>
+   <div class="instructions">Use the sliders or focus the preview and hold the arrow keys. Release to hold your pose. For manual calibration, wait for GO, make one turn or nod, then hold until capture ends.</div>
+  </section>
+ </div>
+ <details id="sensor-details">
+  <summary>Sensor conditions & calibration readings</summary>
+  <div class="sensor-body">
+   <div>
+    <div class="control"><label for="mount">Sensor mounting twist <output id="mount-value">35°</output></label><input id="mount" type="range" min="-180" max="180" step="1" value="35"><p class="help">Changing the mounting angle requires a fresh calibration.</p></div>
+    <div class="control"><label for="noise">Gyro noise <output id="noise-value">0.12 °/s</output></label><input id="noise" type="range" min="0" max="2" step=".02" value=".12"></div>
+    <div class="control"><label for="bias">Gyro bias strength <output id="bias-value">1.0×</output></label><input id="bias" type="range" min="0" max="3" step=".1" value="1"><p class="help">Change after calibration to see drift, then try Re-zero sensor.</p></div>
+   </div>
+   <div><div class="eyebrow">Live sensor sample</div><div class="telemetry" id="telemetry">Waiting for samples…</div><div class="result" id="results">Calibration has not been captured yet.</div></div>
+  </div>
+ </details>
+ <footer><span>Simulated small-angle motion · browser preview coordinates are 1280 × 720.</span><span>Re-zero measures bias while you hold still. Full calibration also learns the axes.</span></footer>
+</main>
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const canvas = $("screen"), ctx = canvas.getContext("2d");
+let state = null, busy = false, commandBusy = false, pendingPose = null, keys = new Set();
+let desired = {yaw:0,pitch:0}, lastFrame = performance.now(), lastPoseSend = 0, errorUntil = 0;
+const units = {gain:v=>v.toFixed(0)+" px/°",deadzone:v=>v.toFixed(1)+" °/s",mount:v=>v.toFixed(0)+"°",noise:v=>v.toFixed(2)+" °/s",bias:v=>v.toFixed(1)+"×",yaw:v=>v.toFixed(1)+"°",pitch:v=>v.toFixed(1)+"°"};
+
+function display(next) {
+ if (state && next.time < state.time) return;
+ state = next;
+ const capturing = !!state.stage;
+ $("enable").disabled = !state.calibrated || capturing;
+ $("enable").textContent = state.active ? "Pause preview" : "Enable preview";
+ $("rezero").disabled = !state.calibrated || capturing;
+ $("demo").disabled = capturing;
+ $("cancel").hidden = !capturing;
+ $("zero").disabled = capturing || state.active;
+ $("right").disabled = capturing || state.active || !state.report.zero;
+ $("down").disabled = capturing || state.active || !state.report.right;
+ $("status").textContent = capturing ? "Calibrating" : state.active ? "Preview enabled" : state.calibrated ? "Paused" : "Awaiting calibration";
+ $("status").classList.toggle("live",state.active);
+ for(const step of ["zero","right","down"]) {
+  $("step-"+step).classList.toggle("current",state.stage===step);
+  $("step-"+step).classList.toggle("done",!!state.report[step]);
+  $("step-"+step).querySelector(".number").textContent=state.report[step] ? "✓" : ["zero","right","down"].indexOf(step)+1;
+ }
+ if(performance.now()>errorUntil) {
+  $("notice").classList.remove("error");
+  let message = state.message;
+  if(capturing) {
+   const instruction = state.stage==="zero" ? "Hold still" : state.stage==="right" ? "Turn right once, then hold" : "Nod down once, then hold";
+   message = state.phase==="countdown" ? instruction+" · get ready" : "GO · "+instruction;
+   if(state.demo) message += " · demo movement";
+  }
+  $("message").textContent=message;
+  $("countdown").textContent=capturing ? state.remaining : state.calibrated ? "✓" : "→";
+ }
+ for(const [key,value] of Object.entries(state.settings)) {
+  $(key).disabled=capturing;
+  if(document.activeElement!==$(key)) { $(key).value=value; $(key+"-value").textContent=units[key](value); }
+ }
+ if(!pendingPose && !commandBusy && keys.size===0) desired={yaw:state.pose.targetYaw,pitch:state.pose.targetPitch};
+ for(const key of ["yaw","pitch"]) {
+  $(key).disabled=state.demo;
+  if(document.activeElement!==$(key)) { $(key).value=desired[key]; $(key+"-value").textContent=units[key](desired[key]); }
+ }
+ for(const id of ["turn","nod","neutral"]) $(id).disabled=state.demo;
+ $("yaw-readout").textContent=units.yaw(state.pose.yaw);
+ $("pitch-readout").textContent=units.pitch(state.pose.pitch);
+ $("avatar").style.transform=`perspective(400px) rotateX(${-state.pose.pitch}deg) rotateY(${state.pose.yaw}deg)`;
+ $("hits").textContent=state.hits;
+ $("telemetry").textContent="Gyro °/s  "+state.gyro.map(v=>v.toFixed(2)).join("  ")+"\nAccel g    "+state.accel.map(v=>v.toFixed(2)).join("  ")+"\nPointer px "+state.pointer.join("  ");
+ $("telemetry").style.whiteSpace="pre-wrap";
+ $("results").textContent=state.report.zero ? "Measured bias "+state.report.zero.bias.map(v=>v.toFixed(3)).join(", ")+" °/s. "+(state.calibrated?"Both movement axes learned.":"Finish the movement captures.") : "Calibration has not been captured yet.";
+}
+
+function showError(message) {
+ $("notice").classList.add("error"); $("message").textContent=message; $("countdown").textContent="!";
+ errorUntil=performance.now()+4500;
+}
+async function command(action,payload={}) {
+ try {
+  const response=await fetch("/api/command",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,payload})});
+  const result=await response.json();
+  if(!response.ok) throw new Error(result.error);
+  errorUntil=0; display(result);
+ } catch(error) { showError(error.message || "The simulator is unavailable. Restart the local server."); }
+}
+function setPose(yaw,pitch) {
+ desired={yaw:Math.max(-25,Math.min(25,yaw)),pitch:Math.max(-25,Math.min(25,pitch))};
+ pendingPose={...desired};
+}
+async function flushPose() {
+ if(!pendingPose || commandBusy) return;
+ const pose=pendingPose; pendingPose=null; commandBusy=true;
+ await command("pose",pose);
+ commandBusy=false;
+}
+$("demo").onclick=()=>{keys.clear();pendingPose=null;command("demo");};
+for(const step of ["zero","right","down"]) $(step).onclick=()=>command("capture",{step});
+$("enable").onclick=()=>command("toggle");
+$("center").onclick=()=>command("center");
+$("rezero").onclick=()=>command("rezero");
+$("cancel").onclick=()=>command("cancel");
+$("turn").onclick=()=>setPose(12,desired.pitch);
+$("nod").onclick=()=>setPose(desired.yaw,12);
+$("neutral").onclick=()=>setPose(0,0);
+for(const key of ["yaw","pitch"]) $(key).oninput=()=>{
+ $(key+"-value").textContent=units[key](Number($(key).value));
+ setPose(Number($("yaw").value),Number($("pitch").value));
+};
+for(const key of Object.keys(units).filter(key=>!["yaw","pitch"].includes(key))) {
+ $(key).oninput=()=>$(key+"-value").textContent=units[key](Number($(key).value));
+ $(key).onchange=()=>command("settings",{[key]:Number($(key).value)});
+}
+function stopInput() {
+ keys.clear(); pendingPose=null;
+ if(state) { desired={yaw:state.pose.yaw,pitch:state.pose.pitch}; command("pause"); }
+}
+window.addEventListener("blur",stopInput);
+document.addEventListener("visibilitychange",()=>{if(document.hidden)stopInput();});
+document.addEventListener("keydown",event=>{
+ if(event.key==="Escape"){event.preventDefault();keys.clear();pendingPose=null;command(state?.stage?"cancel":"pause");return;}
+ const tag=event.target.tagName;
+ if(["INPUT","BUTTON","TEXTAREA","SELECT"].includes(tag))return;
+ if(event.code==="Space"){event.preventDefault();if(!event.repeat)command("toggle");return;}
+ if(event.key.startsWith("Arrow") && !state?.demo) {event.preventDefault();keys.add(event.key);}
+});
+document.addEventListener("keyup",event=>keys.delete(event.key));
+
+function draw() {
+ const w=canvas.width,h=canvas.height;
+ ctx.clearRect(0,0,w,h);ctx.fillStyle="#142c3a";ctx.fillRect(0,0,w,h);
+ ctx.strokeStyle="#24404e";ctx.lineWidth=1;
+ for(let x=40;x<w;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+ for(let y=40;y<h;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+ ctx.fillStyle="#76929f";ctx.font="20px system-ui";ctx.fillText("VIRTUAL SCREEN",30,42);
+ if(!state)return;
+ const [tx,ty]=state.target;
+ ctx.strokeStyle="#ed9a62";ctx.lineWidth=3;ctx.beginPath();ctx.arc(tx,ty,27,0,Math.PI*2);ctx.stroke();
+ ctx.fillStyle="#e9894c";ctx.beginPath();ctx.arc(tx,ty,5,0,Math.PI*2);ctx.fill();
+ if(state.dwell){ctx.lineWidth=5;ctx.strokeStyle="#9ee1c8";ctx.beginPath();ctx.arc(tx,ty,36,-Math.PI/2,-Math.PI/2+Math.PI*2*state.dwell);ctx.stroke();}
+ if(state.trail.length>1) {
+  ctx.strokeStyle="#74b5b580";ctx.lineWidth=2;ctx.beginPath();
+  state.trail.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.stroke();
+ }
+ const [x,y]=state.pointer;
+ ctx.save();ctx.translate(x,y);
+ ctx.shadowColor="#0007";ctx.shadowBlur=10;
+ ctx.fillStyle=state.active?"#eaf9f4":"#8dabb7";ctx.strokeStyle="#142c3a";ctx.lineWidth=2;
+ ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,27);ctx.lineTo(7,20);ctx.lineTo(13,33);ctx.lineTo(19,30);ctx.lineTo(13,17);ctx.lineTo(24,17);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+ if(!state.active){
+  ctx.fillStyle="#102533dd";ctx.fillRect(0,h-70,w,70);ctx.fillStyle="#c2d5dc";ctx.font="21px system-ui";
+  ctx.fillText(state.stage?"Calibration in progress":state.calibrated?"Preview paused · enable when ready":"Calibrate above to begin",30,h-27);
+ }
+ if(state.hitFlash){ctx.fillStyle="#9ee1c8";ctx.font="bold 22px system-ui";ctx.fillText("Target reached",w-210,42);}
+}
+function frame(now) {
+ const dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;
+ if(keys.size && state && !state.demo) {
+  const horizontal=Number(keys.has("ArrowRight"))-Number(keys.has("ArrowLeft"));
+  const vertical=Number(keys.has("ArrowDown"))-Number(keys.has("ArrowUp"));
+  setPose(desired.yaw+horizontal*8*dt,desired.pitch+vertical*8*dt);
+ }
+ if(now-lastPoseSend>40){lastPoseSend=now;flushPose();}
+ draw();requestAnimationFrame(frame);
+}
+async function poll() {
+ if(!busy && !document.hidden) {
+  busy=true;
+  try{
+   const response=await fetch("/api/state");
+   if(!response.ok)throw new Error();
+   display(await response.json());
+  }catch(_error){showError("Connection lost. Start the local simulator server, then reload this page.");}
+  busy=false;
+ }
+ setTimeout(poll,50);
+}
+poll();requestAnimationFrame(frame);
+</script>
+</body>
+</html>

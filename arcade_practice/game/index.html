@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070b18"><title>Neon Drift — flight lab</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main id="app">
+  <canvas id="flight" aria-label="First-person spaceship flight through glowing gates. Steer with your mouse or head mouse."></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="wordmark" href="#" id="home"><span class="logo" aria-hidden="true">◈</span> NEON DRIFT <span class="lab">FLIGHT LAB</span></a>
+    <div class="utilities"><button id="audio" aria-pressed="false">Sound off</button><button id="fullscreen">Full screen</button><button id="pause" hidden>Pause</button></div>
+  </header>
+  <section class="hud" id="hud" hidden aria-label="Flight status">
+    <div><span class="eyebrow">SCORE</span><strong id="score">00000</strong></div>
+    <div><span class="eyebrow">GATES</span><strong id="gates">00</strong></div>
+    <div><span class="eyebrow">STREAK</span><strong id="streak">00</strong></div>
+    <div class="hud-end"><span class="eyebrow" id="timer-label">FLIGHT TIME</span><strong id="timer">00:00</strong></div>
+  </section>
+  <div id="feedback" role="status" aria-live="polite"></div>
+  <div id="countdown" hidden aria-live="assertive"></div>
+  <section id="menu" class="overlay" aria-label="Flight setup">
+    <div class="intro"><div class="eyebrow"><span class="signal"></span> EXPERIMENTAL / MOUSE PRACTICE</div>
+      <h1>Find your<br><em>flow state.</em></h1>
+      <p>A ship. An endless neon runway.<br>Small movements. Smooth lines.</p>
+      <div class="intro-rule"></div>
+      <div class="brief"><span>01</span><p>Steer with your pointer.<br>Forward flight is automatic.</p></div>
+      <div class="brief"><span>02</span><p>Line up the centre reticle with each gate.<br>Gentle turns beat big corrections.</p></div>
+    </div>
+    <div class="setup panel">
+      <div class="panel-head"><span class="eyebrow">PRE-FLIGHT</span><span class="chip">LOCAL ONLY</span></div>
+      <h2>Choose your flight</h2>
+      <div class="mode-tabs" role="group" aria-label="Flight type"><button id="practice" class="selected" aria-pressed="true">Free flight<span>No clock. No pressure.</span></button><button id="trial" aria-pressed="false">Time trial<span>A 60-second run.</span></button></div>
+      <label class="field-label" for="difficulty">Gate size</label>
+      <select id="difficulty"><option value="relaxed">Wide gates · relaxed</option><option value="balanced">Medium gates · balanced</option><option value="precise">Small gates · precision</option></select>
+      <label class="field-label pace-label" for="speed"><span>Flight speed</span><output id="pace">28 / CRUISE</output></label>
+      <input id="speed" type="range" min="16" max="58" value="28" aria-label="Flight speed">
+      <label class="check"><input id="comfort" type="checkbox" checked><span>Comfort view <small>Less banking and fewer speed streaks</small></span></label>
+      <button id="start" class="primary">Launch flight <span aria-hidden="true">↗</span></button>
+      <p class="setup-note">Mouse or head mouse · no keyboard or rapid clicking required</p>
+    </div>
+  </section>
+  <section id="paused" class="overlay centered" hidden aria-label="Flight paused">
+    <div class="panel pause-panel"><div class="eyebrow">FLIGHT ON HOLD</div><h2 id="pause-title">Take a breath.</h2><p id="pause-reason">Reposition comfortably, then continue.</p><div class="pause-stats"><span>Score <b id="paused-score">0</b></span><span>Accuracy <b id="paused-accuracy">—</b></span></div><button id="resume" class="primary">Continue flight <span aria-hidden="true">↗</span></button><button id="end" class="secondary">End flight</button></div>
+  </section>
+  <section id="results" class="overlay centered" hidden aria-label="Flight results">
+    <div class="panel results-panel"><div class="eyebrow">FLIGHT COMPLETE</div><h2>Nice flying.</h2><div class="result-score" id="final-score">0</div><div class="result-grid"><div><span>Gates</span><strong id="final-gates">0</strong></div><div><span>Accuracy</span><strong id="final-accuracy">—</strong></div><div><span>Best streak</span><strong id="final-streak">0</strong></div></div><p>Try smaller, calmer corrections on your next run.</p><button id="again" class="primary">Back to flight setup <span aria-hidden="true">↗</span></button></div>
+  </section>
+  <footer><span><i class="status-dot"></i> <span id="flight-status">Awaiting pilot</span></span><span id="flight-tip">Original arcade experiment · separate from calibration</span><span class="key-hint">ESC / P <span>PAUSE</span></span></footer>
+</main>
+<script type="module" src="/game.js"></script>
+</body>
+</html>

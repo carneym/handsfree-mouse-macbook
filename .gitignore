@@ -1,0 +1,27 @@
+.venv/
+__pycache__/
+.venv-cad/
+desktop/.head_mouse_profile.json
+desktop/.head_mouse_*.tmp
+Head Mouse.app/
+
+build/
+release/
+
+# Local OS/editor files and credentials
+.DS_Store
+.AppleDouble/
+._*
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.log
+.vscode/
+.idea/
+.pytest_cache/
+
+# Generated installers and application bundles
+*.app/
+*.dmg

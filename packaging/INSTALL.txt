@@ -1,0 +1,75 @@
+HEAD MOUSE 1.4.0 — APPLE SILICON
+
+Requires an Apple silicon Mac (M-series), macOS 14 Sonoma or later,
+and a XIAO nRF52840 Sense running this project's head-mouse firmware.
+This package includes Python and its dependencies. Homebrew, Arduino tools
+and a separate Python installation are not needed on the destination Mac.
+Intel Macs are not supported by this build.
+
+INSTALL
+1. Open the Head Mouse disk image.
+2. Drag Head Mouse.app onto the Applications shortcut.
+3. Eject the disk image, then open Head Mouse from Applications.
+   The pointer icon in the menu bar opens Controls and Settings.
+   Alternatively, unzip the ZIP and move Head Mouse.app to Applications.
+
+This personal/testing build is ad-hoc signed, not Apple notarized.
+macOS may block its first launch. After attempting to open it, use
+System Settings > Privacy & Security > Open Anyway if macOS offers it
+and you trust the source. Managed Macs may require administrator approval.
+Do not disable Gatekeeper or other system protections. A Developer ID-signed
+and notarized release is needed for normal public distribution.
+
+FIRST SETUP ON EACH MAC
+1. In Head Mouse > Settings, choose USB or Bluetooth, Find device, select
+   your XIAO and Connect. Approve Bluetooth access or pairing if requested.
+   Disconnect the XIAO from another computer first; it supports one host.
+2. Select Calibrate… from Controls. The centred prompts automatically guide
+   you through Hold still, Turn right, and Nod down. Wear the device in its
+   intended position and make only small 5–10 degree movements. Each capture
+   advances only when its readings pass validation. Computer control stays
+   off when calibration finishes. Use Turn on computer control to start directly,
+   or Done to return to the menu. Cancel or Esc
+   keeps the previous calibration. Open full setup for manual calibration.
+3. Allow Head Mouse in System Settings > Privacy & Security > Accessibility
+   when you want to control the computer. The menu helper does not need
+   separate mouse-control permission. Permissions do not transfer from
+   another Mac or from the earlier Python development app.
+4. Return to Controls and turn Computer control ON. Clicking uses Dwell
+   by default. Computer control starts OFF; mode gestures start ON.
+
+CONTROLS
+Mode 1: Click / Drag / Scroll.
+Mode 2: Click / Double click / Right click.
+Dwell or Sound provides the click trigger. Sound setup / test lets you
+check tongue-click or mouth-pop detection without clicking the computer.
+Pointer tuning starts collapsed. Expand it to adjust pointer speed,
+ignore-tiny-movements threshold, and computer sensitivity.
+Two left-right pairs cycle the selected set of actions.
+Three up-down pairs (starting up) recenter the head without moving the cursor.
+If those gestures were customised, your saved mappings take precedence.
+
+Re-zero drift after connecting. Recalibrate all three steps if the mount
+has changed. To stop, use Computer control OFF, Disconnect, or Quit Head
+Mouse in Settings. Closing full setup leaves the menu bar running.
+Esc pauses while full setup has keyboard focus.
+
+SAVED SETTINGS
+Each user's settings and calibration are stored outside the app at:
+~/Library/Application Support/Head Mouse/profile.json
+The download contains no saved calibration or Bluetooth device addresses.
+Never copy another user's calibration as a substitute for first setup.
+
+UPDATING / REMOVING
+Quit Head Mouse before replacing it in Applications. Your settings remain
+in Application Support. Accessibility approval may need to be renewed after
+an update, especially for an ad-hoc signed build. To remove the app, quit it
+and move it to Trash. Remove its Application Support folder only if you also
+want to remove that user's saved setup.
+
+SOURCE AND LICENSES
+The app includes runtime license notices in Contents/Resources/Third Party
+Notices, and the icon artwork license in assets/lucide. The installer also
+includes Sources and build instructions.zip, with application/build sources
+and the matching pynput 1.8.2 source archive for its LGPL terms. These sources
+are optional for ordinary installation.

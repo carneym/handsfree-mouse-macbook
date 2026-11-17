@@ -1,0 +1,28 @@
+REBUILD HEAD MOUSE 1.4.0
+
+Use an Apple silicon Mac and an arm64 Python 3.14 with Tk support.
+For a source-only rebuild, create a virtual environment at the source root:
+
+python3.14 -m venv .venv
+.venv/bin/python -m pip install -r desktop/requirements.txt
+.venv/bin/python -m pip install -r packaging/requirements-build.txt
+.venv/bin/python packaging/build_release.py
+
+The pinned icon source and compiled .icns are included. No icon generation
+step or Node installation is required to build this release.
+
+The runtime versions used for the supplied binaries are listed inside
+Head Mouse.app/Contents/Resources/Third Party Notices/Bundled versions.json.
+
+To modify/replace the LGPL pynput library, extract its matching archive from
+packaging/vendor-sources, edit it as desired, install that local source into
+.venv in place of pynput, then run the same build command. Application and
+packaging sources are supplied so you can rebuild and relink this bundle.
+The rebuild uses an ad-hoc signature unless --identity is provided.
+
+With a Developer ID Application identity installed in the build keychain:
+.venv/bin/python packaging/build_release.py --identity 'Developer ID Application: ...'
+
+Signing and notarization are distinct. Notarize the signed release with
+Apple's notarytool and staple the ticket before public distribution.
+This testing build has not been submitted to Apple's notary service.
